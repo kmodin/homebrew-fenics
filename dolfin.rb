@@ -22,7 +22,7 @@ class Dolfin < Formula
 
   depends_on :mpi => [:cc, :cxx, :f90, :recommended]
 
-  depends_on 'petsc' => :recommended if build.with? :mpi
+  depends_on 'petsc-fenics' => :recommended if build.with? :mpi
   depends_on 'slepc' => :recommended if build.with? :mpi
   depends_on 'scotch' => :recommended if build.with? :mpi
   depends_on 'pastix' => :recommended if build.with? :mpi
@@ -43,7 +43,7 @@ class Dolfin < Formula
     depends_on 'vtk5' => 'with-qt'
   end
 
-  depends_on 'ufc'
+  #depends_on 'ufc'
   depends_on 'fiat'
   depends_on 'ufl'
   depends_on 'ffc'
@@ -55,7 +55,7 @@ class Dolfin < Formula
     end
 
     ENV.deparallelize
-    ENV['PETSC_DIR'] = Formula.factory('petsc').prefix
+    ENV['PETSC_DIR'] = Formula.factory('petsc-fenics').prefix
     ENV['PETSC_ARCH'] = 'arch-darwin-c-opt'
     ENV['SLEPC_DIR'] = Formula.factory('slepc').prefix
     ENV['TAO_DIR'] = Formula.factory('tao').prefix
