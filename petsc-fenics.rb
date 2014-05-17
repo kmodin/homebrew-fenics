@@ -1,6 +1,6 @@
 require 'formula'
 
-class Petsc < Formula
+class PetscFenics < Formula
   homepage 'http://www.mcs.anl.gov/petsc/index.html'
   url 'http://ftp.mcs.anl.gov/pub/petsc/release-snapshots/petsc-lite-3.4.4.tar.gz'
   sha1 '2f507195a3142eb0599e78a909446175a597480a'
