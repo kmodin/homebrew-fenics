@@ -11,6 +11,7 @@ class Petsc < Formula
   depends_on :mpi => :cc
   depends_on :fortran
   depends_on :x11 => MacOS::X11.installed? ? :recommended : :optional
+  depends_on 'hypre' => :optional
   depends_on 'metis' => :optional
   depends_on 'parmetis' => :optional
   depends_on 'mumps' => :optional
@@ -23,7 +24,7 @@ class Petsc < Formula
     petsc_arch = 'arch-darwin-c-opt'
     args = ["--with-debugging=0", "--with-shared-libraries=1", "--prefix=#{prefix}/#{petsc_arch}"]
     args << "--with-x=0" if build.without? 'x11'
-    #args << "--download-hypre"
+    args << "--with-hypre-dir=#{Formula["hypre"].prefix}" if build.with? "hypre"
     args << "--with-metis-dir=#{Formula["metis"].prefix}" if build.with? "metis"
     args << "--with-parmetis-dir=#{Formula["parmetis"].prefix}" if build.with? "parmetis"
     args << "--with-mumps-dir=#{Formula["mumps"].prefix}" if build.with? "mumps"

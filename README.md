@@ -41,7 +41,7 @@ A simple script to build [FEniCS](http://fenicsproject.org) on OSX relying on [H
   brew install metis parmetis suite-sparse
   brew install scalapack --with-openblas --without-check
   brew install mumps
-  brew install optimizers/fenics/petsc --with-metis --with-parmetis --with-mumps --with-scalapack --with-suite-sparse
+  brew install optimizers/fenics/petsc --with-hypre --with-metis --with-parmetis --with-mumps --with-scalapack --with-suite-sparse
   brew install slepc tao
 
 5. Now you can install `dolfin`:
