@@ -55,13 +55,14 @@ class Dolfin < Formula
     end
 
     ENV.deparallelize
-    ENV['PETSC_DIR'] = Formula.factory('petsc-fenics').prefix
+    ENV['PETSC_DIR'] = Formula['petsc-fenics'].prefix
     ENV['PETSC_ARCH'] = 'arch-darwin-c-opt'
     #ENV['SLEPC_DIR'] = Formula.factory('slepc').prefix
-    ENV['TAO_DIR'] = Formula.factory('tao').prefix
-    ENV['PARMETIS_DIR'] = Formula.factory('parmetis').prefix
-    ENV['UMFPACK_DIR'] = Formula.factory('suite-sparse').prefix
-    opoo ENV['UMFPACK_DIR']
+    ENV['TAO_DIR'] = Formula['tao'].prefix
+    ENV['PARMETIS_DIR'] = Formula['parmetis'].prefix
+    ENV['AMD_DIR'] = Formula['suite-sparse'].prefix
+    ENV['CHOLMOD_DIR'] = Formula['suite-sparse'].prefix
+    ENV['UMFPACK_DIR'] = Formula['suite-sparse'].prefix
 
     # ENV['SCOTCH_DIR'] = Formula.factory('scotch').prefix
     # ENV['PASTIX_DIR'] = Formula.factory('pastix').prefix

@@ -45,6 +45,11 @@ A simple script to build [FEniCS](http://fenicsproject.org) on OSX relying on [H
   brew install slepc tao
   ```
 
+5. `cgal` needs to be v4.3 for Dolfin, so grab it out of the history
+  ```
+  brew install https://raw.githubusercontent.com/Homebrew/homebrew/68ac0f7ef7bd321ade8b22ae4aa3932579ef01a9/Library/Formula/cgal.rb
+  ```
+
 5. Now you can install `dolfin`:
   ```
   brew install dolfin --env=std
