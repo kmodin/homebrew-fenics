@@ -32,22 +32,32 @@ A simple script to build [FEniCS](http://fenicsproject.org) on OSX relying on [H
 4. Install `numpy` and `ply` with `pip`:
 
   ```
-  pip install numpy
+  brew install suite-sparse
+  brew install numpy
+  brew install scipy
+  brew install metis openmpi
+  brew install parmetis --shared
   pip install ply
   ```
 5. Install `mpi` and `petsc` and other packages:
   ```
-  brew install open-mpi 
-  brew install metis parmetis suite-sparse
-  brew install scalapack --with-openblas --without-check
-  brew install mumps
+  brew install scalapack --with-openblas --without-check --with-shared-libs
+  brew install mumps --weith-openblas
   brew install optimizers/fenics/petsc-fenics --with-hypre --with-metis --with-parmetis --with-mumps --with-scalapack --with-suite-sparse
-  brew install slepc tao
   ```
 
-5. `cgal` needs to be v4.3 for Dolfin, so grab it out of the history
+5. boost:
   ```
-  brew install https://raw.githubusercontent.com/Homebrew/homebrew/68ac0f7ef7bd321ade8b22ae4aa3932579ef01a9/Library/Formula/cgal.rb
+  brew install boost --with-mpi --without-single
+  ```
+
+5. `cgal` needs to be [v4.3](https://raw.githubusercontent.com/Homebrew/homebrew/68ac0f7ef7bd321ade8b22ae4aa3932579ef01a9/Library/Formula/cgal.rb) for Dolfin, so grab it out of the history or from the `homebrew-fenics` tap
+  ```
+  brew install cgal43
+  ```
+5. vtk5:
+  ```
+  brew install vtk --with-qt --with-python
   ```
 
 5. Now you can install `dolfin`:
