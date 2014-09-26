@@ -2,48 +2,52 @@ require 'formula'
 
 class Dolfin < Formula
   homepage 'https://bitbucket.org/fenics-project/dolfin'
-  url 'https://bitbucket.org/fenics-project/dolfin/downloads/dolfin-1.3.0.tar.gz'
-  sha1 'af1a3fe0798df54a563fe0e616a3da08f0c5e6fa'
+  url 'https://bitbucket.org/fenics-project/dolfin/downloads/dolfin-1.4.0.tar.gz'
+  sha1 'b58cb5e4aaef0825ded1237ba6012d7aee63c152'
 
   depends_on :fortran
   depends_on :python
 
-  depends_on 'suite-sparse'
-  depends_on 'eigen'
-  depends_on 'cgal43' => :recommended
+  # Check Python dependencies
+  depends_on 'numpy' => :python
+  depends_on 'ply' => :python
+  depends_on 'matplotlib' => :python
 
+  # Check build dependencies
   depends_on 'cmake' => :build
   depends_on 'cppunit' => :build
   depends_on 'pkg-config' => :build
   depends_on 'swig' => :build
 
-  depends_on 'numpy' => :python
-  depends_on 'ply' => :python
+  # Check non-mpi dolfin dependencies
+  depends_on 'suite-sparse'
+  depends_on 'eigen'
+  depends_on 'cgal43' => :recommended
+  depends_on 'boost' => ['--without-single'] if build.without? :mpi
 
-  depends_on :mpi => [:cc, :cxx, :f90, :recommended]
-
-  depends_on 'petsc-fenics' => :recommended if build.with? :mpi
-  #depends_on 'slepc' => :recommended if build.with? :mpi
-  depends_on 'scotch' => :recommended if build.with? :mpi
-  depends_on 'pastix' => :recommended if build.with? :mpi
-
-  depends_on 'parmetis' => :recommended if build.with? :mpi
-  depends_on 'hdf5' => ['enable-parallel', :recommended] if build.with? :mpi
-  depends_on 'boost' => ['without-single', 'with-mpi'] if build.with? :mpi
-
-  if build.without? :mpi
-    depends_on 'boost' => ['--without-single']
+  # Check mpi dolfin dependencies
+  unless build.without? :mpi
+    depends_on :mpi => [:cc, :cxx, :f90, :recommended]
+    #depends_on 'slepc' => :recommended if build.with? :mpi
+    depends_on 'scotch' => :recommended
+    depends_on 'pastix' => :recommended
+    depends_on 'parmetis' => ['shared', :recommended]
+    depends_on 'hdf5' => ['enable-parallel', :recommended]
+    depends_on 'scalapack' => ['with-openblas', 'without-check', 'with-shared-libs']
+    depends_on 'mumps' => ['with-openblas']
+    depends_on 'petsc-fenics' => ['with-hypre', 'with-metis', 'with-parmetis', 'with-mumps', 'with-scalapack', 'with-suite-sparse', :recommended]
+    depends_on 'boost' => ['without-single', 'with-mpi'] if build.with? :mpi
   end
 
-  # vtk5 should grab these dependencies, but it doesn't.  thus this hack.
-  option 'without-vtk5', 'Build without vtk5 support'
-  unless build.without? 'vtk5'
+  # Check VTK dolfin dependencies
+  option 'without-vtk', 'Build without vtk support'
+  unless build.without? 'vtk'
     depends_on 'sip'
     depends_on 'pyqt'
-    depends_on 'vtk5' => 'with-qt'
+    depends_on 'vtk' => 'with-matplotlib'
   end
 
-  #depends_on 'ufc'
+  # Check fenics dependencies
   depends_on 'fiat'
   depends_on 'ufl'
   depends_on 'ffc'
