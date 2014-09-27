@@ -1,6 +1,6 @@
 # Build FEniCS from Scratch
 
-A simple script to build [FEniCS](http://fenicsproject.org) on OSX relying on [Homebrew](http://brew.sh) and [pip](http://www.pip-installer.org).
+A simple script to build [FEniCS](http://fenicsproject.org) version 1.4.0 on Mac OS X 10.9 (Mavericks) relying on [Homebrew](http://brew.sh) and [pip](http://www.pip-installer.org).
 
 
 1. Install [Homebrew](http://brew.sh):
@@ -19,51 +19,46 @@ A simple script to build [FEniCS](http://fenicsproject.org) on OSX relying on [H
 3. Add this tap:
   
   ```
-  brew tap optimizers/fenics
+  brew tap kmodin/homebrew-fenics
   ```
 
 3. Install the python from brew:
-
+  
   ```
   brew install python
   brew linkapps
   ```
 
-4. Install `numpy` and `ply` with `pip`:
+4. Install Python packages `numpy`, `matplotlib`, `scipy` and `ply`:
 
   ```
-  brew install suite-sparse
+  cd /usr/local/Library/Taps/homebrew/homebrew-python
+  git checkout 8a98fa1 numpy.rb
+  cd -
   brew install numpy
   brew install scipy
-  brew install metis openmpi
-  brew install parmetis --shared
   pip install ply
   ```
-5. Install `mpi` and `petsc` and other packages:
-  ```
-  brew install scalapack --with-openblas --without-check --with-shared-libs
-  brew install mumps --weith-openblas
-  brew install optimizers/fenics/petsc-fenics --with-hypre --with-metis --with-parmetis --with-mumps --with-scalapack --with-suite-sparse
-  ```
 
-5. boost:
-  ```
-  brew install boost --with-mpi --without-single
-  ```
+5. Install `dolfin` with `vtk` and MPI support:
 
-5. `cgal` needs to be [v4.3](https://raw.githubusercontent.com/Homebrew/homebrew/68ac0f7ef7bd321ade8b22ae4aa3932579ef01a9/Library/Formula/cgal.rb) for Dolfin, so grab it out of the history or from the `homebrew-fenics` tap
-  ```
-  brew install cgal43
-  ```
-5. vtk5:
-  ```
-  brew install vtk --with-qt --with-python
-  ```
-
-5. Now you can install `dolfin`:
   ```
   brew install dolfin --env=std
   ```
+
+6. Alternatively, install without MPI support:
+
+  ```
+  brew install dolfin --without-mpi --env=std
+  ```
+
+7. Or without `vtk` support:
+
+  ```
+  brew install dolfin --without-vtk
+  ```
+
+
 
 ## Some comments on `dolfin.rb.`
 
@@ -100,27 +95,20 @@ With everything included (nothing excluded with `--without`) the following shoul
 
 Demos are included here:
 ```
-/usr/local/Cellar/dolfin/1.3.0/share/dolfin/demo
+/usr/local/Cellar/dolfin/1.4.0/share/dolfin/demo
 ```
 
 #### Issues
 
 There are several outstanding issues:
 
+- `numpy` version 1.8 is necessary since [ScientificPython](https://sourcesup.renater.fr/frs/?group_id=180&release_id=2480#development-releases-_2.9.3-title-content) requires the `numpy.oldnumeric` module, removed in version 1.9 of `numpy`.
+
 - Relying on `depends_on slepc` to install `slepc` has path issues.
 
 - MPI works with `open-mpi`.  There are issues, possibly with Boost, with `mpich2`.
 
-- To build with `petsc`, `dolfin` install needs `--env=std`.  This indicates a path error with `superenv`.
-
-- Within the formula, `depends_on vtk5` does not install `sip` and `pyqt`, which are dependencies.  This is a bug with `vtk5`, thus the work-around here.
-
 - Currently `tao` does not work.  There is an issue with the installation of the `lib`.
-
-- The `PATH` should work with `dolfin`, but this is an option if it does not:
-```
-source /usr/local/Cellar/dolfin/1.3.0/share/dolfin/dolfin.conf
-```
 
 - With `sphinx` installed, `dolfin` cannot find it.
 
@@ -149,90 +137,3 @@ source /usr/local/Cellar/dolfin/1.3.0/share/dolfin/dolfin.conf
     workon fenics
     ```
 
-## old build script:
-
-    ```
-    #!/bin/bash
-
-    # Save these environment variables if they were set
-    [[ ${PETSC_DIR+set}  == 'set' ]] && PETSC_DIR_BKUP=$PETSC_DIR
-    [[ ${PETSC_ARCH+set} == 'set' ]] && PETSC_ARCH_BKUP=$PETSC_ARCH
-    [[ ${SLEPC_DIR+set}  == 'set' ]] && SLEPC_DIR_BKUP=$SLEPC_DIR
-    [[ ${TAO_DIR+set}    == 'set' ]] && TAO_DIR_BKUP=$TAO_DIR
-    unset PETSC_DIR PETSC_ARCH SLEPC_DIR TAO_DIR
-
-    # Ensure we have Python
-    brew install python
-
-    # Pip stuff.
-
-    ## FFC
-    #pip install ffc
-    pip install git+https://bitbucket.org/fenics-project/ffc.git
-
-    ## FIAT
-    # FIAT requires ScientificPython, though it doesn't say anywhere...
-    pip install https://sourcesup.renater.fr/frs/download.php/4153/ScientificPython-2.9.2.tar.gz
-
-    #   `pip install fiat` currently fails.
-    #   For the time being, grab FIAT from BitBucket.
-    pip install git+https://bitbucket.org/fenics-project/fiat.git
-
-    ## INSTANT
-    #pip install instant
-    pip install git+https://bitbucket.org/fenics-project/instant.git
-
-    ## UFL
-    # pip install ufl
-    pip install git+https://bitbucket.org/fenics-project/ufl.git
-
-    ## PLY (required to Swig stuff.)
-    pip install ply
-
-    ## SPHINX
-    pip install sphinx
-
-    # Homebrew stuff.
-    # 1. Prerequisites
-    brew install swig
-    brew install boost --with-mpi --without-single
-
-    brew tap homebrew/science
-    brew install armadillo
-    brew install cgal
-    brew install hdf5 --enable-parallel
-
-    brew install petsc
-    pip install mpi4py
-    PETSC_DIR=$(brew --prefix petsc) PETSC_ARCH='arch-darwin-c-opt' pip install petsc4py
-
-    brew install parmetis
-
-    brew install qt
-
-    brew install scotch
-    brew install pastix
-
-    brew install slepc
-    SLEPC_DIR=$(brew --prefix slepc) pip install slepc4py
-
-    brew install sphinx
-
-    brew install tao
-    TAO_DIR=$(brew --prefix tao) pip install tao4py  # Not strictly necessary.
-
-    brew install vtk --with-qt --with-python
-
-    # ! The trilinos formula has been patched.
-    brew install trilinos --with-boost --with-scotch
-
-    #2. Install FEniCS.
-    brew install --HEAD ufc
-    #brew install dolfin
-
-    # Restore these environment variables if they were set
-    [[ ${PETSC_DIR_BKUP+set}  == 'set' ]] && export PETSC_DIR=$PETSC_DIR_BKUP
-    [[ ${PETSC_ARCH_BKUP+set} == 'set' ]] && export PETSC_ARCH=$PETSC_ARCH_BKUP
-    [[ ${SLEPC_DIR_BKUP+set}  == 'set' ]] && export SLEPC_DIR=$SLEPC_DIR_BKUP
-    [[ ${TAO_DIR_BKUP+set}    == 'set' ]] && export TAO_DIR=$TAO_DIR_BKUP
-  ```
