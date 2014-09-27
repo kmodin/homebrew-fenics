@@ -1,14 +1,13 @@
-# Build FEniCS from Scratch
+# Build FEniCS 1.4.0 from scratch
 
-A simple script to build [FEniCS](http://fenicsproject.org) version 1.4.0 on Mac OS X 10.9 (Mavericks) relying on [Homebrew](http://brew.sh) and [pip](http://www.pip-installer.org).
-
+A simple script to build [FEniCS](http://fenicsproject.org) version 1.4.0 on Mac OS X 10.9 (Mavericks)
 
 1. Install [Homebrew](http://brew.sh):
   
   ```
   ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)"
   ```
-2. Add the science, python, and versions taps
+2. Add the science, python, and versions taps:
   
   ```
   brew tap homebrew/science
