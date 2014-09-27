@@ -23,10 +23,14 @@ class Dolfin < Formula
   depends_on 'suite-sparse'
   depends_on 'eigen'
   depends_on 'cgal43' => :recommended
-  depends_on 'boost' => ['--without-single'] if build.without? :mpi
+
+  option 'without-mpi', 'Build without mpi support'
+  if build.without? 'mpi'
+    depends_on 'boost' => ['without-single']
+  end
 
   # Check mpi dolfin dependencies
-  unless build.without? :mpi
+  unless build.without? 'mpi'
     depends_on :mpi => [:cc, :cxx, :f90, :recommended]
     #depends_on 'slepc' => :recommended if build.with? :mpi
     depends_on 'scotch' => :recommended
@@ -36,7 +40,7 @@ class Dolfin < Formula
     depends_on 'scalapack' => ['with-openblas', 'without-check', 'with-shared-libs']
     depends_on 'mumps' => ['with-openblas']
     depends_on 'petsc-fenics' => ['with-hypre', 'with-metis', 'with-parmetis', 'with-mumps', 'with-scalapack', 'with-suite-sparse', :recommended]
-    depends_on 'boost' => ['without-single', 'with-mpi'] if build.with? :mpi
+    depends_on 'boost' => ['without-single', 'with-mpi']
   end
 
   # Check VTK dolfin dependencies
@@ -44,7 +48,7 @@ class Dolfin < Formula
   unless build.without? 'vtk'
     depends_on 'sip'
     depends_on 'pyqt'
-    depends_on 'vtk' => 'with-matplotlib'
+    depends_on 'vtk' => ['with-matplotlib', 'with-qt']
   end
 
   # Check fenics dependencies
